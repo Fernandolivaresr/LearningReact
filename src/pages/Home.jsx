@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MovieCard from "../components/MovieCard";
 import "./../css/Home.css";
+import { searchMovies, getPopularMovies } from "../services/api";
 
 function Home() {
   // STATE
@@ -12,7 +13,38 @@ function Home() {
   // useState("") will define default value
   const [searchQuery, setSearchQuery] = useState("");
 
-  const movies = [
+  // useEFFECT
+  const [movies, setMovies] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  // how to use
+  // pretty much we pass a function and then
+  /* You put a function(() => {}) inside useEffect that you want to call when the array([]) changes  
+  We pass a function known as dependency array, 
+  we gonna check it every render
+  
+  So dependency array
+  Anything inside the [], if any of those values change, it will run the effect(the function () =>) again
+  If nothing inside : it will just run the fun 1 time right when the component is rendered on screen.
+  And if any STATE changes the effect will not run cuz nothing has changed in the dependency array
+  */
+  useEffect(() => {
+    const loadPopularMovies = async () => {
+      try {
+        const popularMovies = await getPopularMovies();
+        setMovies(popularMovies);
+      } catch (err) {
+        console.log(err);
+        setError("Failed to load movies");
+      } finally {
+        // we not longer loading
+        setLoading(false);
+      }
+    };
+    loadPopularMovies();
+  }, []);
+
+  const movies2 = [
     { id: 1, title: "Jonh Wick", release_date: "2022" },
     { id: 2, title: "Terminator", release_date: "1999" },
     { id: 3, title: "The Matrix", release_date: "2000" },
