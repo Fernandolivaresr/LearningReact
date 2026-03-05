@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
 import MovieCard from "../components/MovieCard";
-import "./../css/Home.css";
+import { useState, useEffect } from "react";
 import { searchMovies, getPopularMovies } from "../services/api";
+import "./../css/Home.css";
 
 function Home() {
   // STATE
@@ -51,10 +51,28 @@ function Home() {
     { id: 4, title: "Sicario", release_date: "2020" },
   ];
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
-    alert(searchQuery);
-    setSearchQuery("");
+    //alert(searchQuery);
+
+    // to prevent searching empty query
+    if (!searchQuery.trim()) return;
+    if (loading) return;
+
+    setLoading(true);
+    try {
+      const searchResults = await searchMovies(searchQuery);
+      setMovies(searchResults);
+      setError(null);
+    } catch (err) {
+      console.log(err);
+      setError("Failed to find movies...");
+    } finally {
+      setLoading(false);
+    }
+
+    //in case u wanna set the seach bar to empty after search
+    //setSearchQuery("");
   };
 
   return (
@@ -74,15 +92,25 @@ function Home() {
         </button>
       </form>
 
-      <div className="movies-grid">
-        {movies.map(
-          (movie) =>
-            // conditionally rendering the movie (includes vs startsWith)
-            movie.title.toLowerCase().includes(searchQuery) && (
+      {error && <div className="error-message">{error}</div>}
+
+      {
+        //Using conditional rendering to when the page loading it shows loading
+
+        loading ? (
+          <div className="loading">Loading ...</div>
+        ) : (
+          <div className="movies-grid">
+            {movies.map((movie) => (
+              // conditionally rendering the movie (includes vs startsWith)
+              /*           movie.title.toLowerCase().includes(searchQuery) && (
+                  <MovieCard movie={movie} key={movie.id} />
+                ), */
               <MovieCard movie={movie} key={movie.id} />
-            ),
-        )}
-      </div>
+            ))}
+          </div>
+        )
+      }
     </div>
   );
 }
