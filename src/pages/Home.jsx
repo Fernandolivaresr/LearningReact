@@ -7,7 +7,7 @@ function Home() {
   // STATE
   // WHEN A STATE CHANGE OCCURS, THE ENTIRE COMPONENTS IS RERAN OR RE-RENDERED
   // We need to use state because wtv the value is, we want to store withing this component
-  // Just when u refresh the webpage the state restarts
+  // Just when u refresh the webpage the state restarts, it only affects the home page
   // searchQuery will store the value
   // setSearchQuery will change it
   // useState("") will define default value
