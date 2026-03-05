@@ -1,8 +1,10 @@
-function onFavoriteClick() {
-  alert("Clicked");
-}
+import "./../css/MovieCard.css";
 
 function MovieCard({ movie }) {
+  function onFavoriteClick() {
+    alert("Clicked");
+  }
+
   return (
     <div className="movie-card">
       <div className="movie-poster">
@@ -15,7 +17,7 @@ function MovieCard({ movie }) {
       </div>
       <div className="movie-info">
         <h3>{movie.title}</h3>
-        <p> Date: {movie.release_date}</p>
+        <p>{movie.release_date}</p>
       </div>
     </div>
   );
